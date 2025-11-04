@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Recipe Explorer application is a modern, responsive React single-page application (SPA) that allows users to browse, search, and manage recipes. It implements the Ocean Professional theme, emphasizing a clean, accessible UI with blue and amber accents, rounded corners, subtle shadows, and gradients. The frontend integrates with a RESTful backend API for CRUD operations and supports a built-in mock API for development and preview environments via feature flags.
+The Recipe Pro application is a modern, responsive React single-page application (SPA) that allows users to browse, search, and manage recipes. It implements the Ocean Professional theme, emphasizing a clean, accessible UI with blue and amber accents, rounded corners, subtle shadows, and gradients. The frontend integrates with a RESTful backend API for CRUD operations and supports a built-in mock API for development and preview environments via feature flags.
 
 This document describes the architecture, components, routing, state management, API integration strategy, data models, error handling, theming, accessibility, security placeholders, environment configuration, deployment considerations, scalability, and future extensions. It references the current code to ensure accuracy.
 
