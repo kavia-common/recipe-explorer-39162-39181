@@ -1,4 +1,4 @@
-# Recipe Explorer Frontend Architecture
+# Recipe Pro Frontend Architecture
 
 ## Overview
 
