@@ -1,49 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import "./styles.css";
+import { applyThemeCSSVars } from "./theme";
+import Header from "./components/Header";
+import Modal from "./components/Modal";
+import RecipeForm from "./components/RecipeForm";
+import Home from "./pages/Home";
+import Detail from "./pages/Detail";
+import { RecipeProvider, useRecipes } from "./context/RecipeContext";
 
-// PUBLIC_INTERFACE
-function App() {
-  const [theme, setTheme] = useState('light');
+function AppShell() {
+  const { createRecipe } = useRecipes();
+  const [open, setOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  // Effect to apply theme to document element
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  // PUBLIC_INTERFACE
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  const onCreate = async (payload) => {
+    try {
+      setSubmitting(true);
+      await createRecipe(payload);
+      setOpen(false);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-root">
+      <Header onOpenCreate={() => setOpen(true)} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/recipes/:id" element={<Detail />} />
+      </Routes>
+
+      <Modal open={open} onClose={() => setOpen(false)} title="Create Recipe">
+        <RecipeForm
+          initialValue={null}
+          onSubmit={onCreate}
+          onCancel={() => setOpen(false)}
+          submitting={submitting}
+        />
+      </Modal>
     </div>
   );
 }
 
-export default App;
+// PUBLIC_INTERFACE
+export default function App() {
+  /** Root application entry with theme setup and providers. */
+  const [themeReady, setThemeReady] = useState(false);
+  useEffect(() => {
+    applyThemeCSSVars();
+    setThemeReady(true);
+  }, []);
+  if (!themeReady) return null;
+
+  return (
+    <Router>
+      <RecipeProvider>
+        <AppShell />
+      </RecipeProvider>
+    </Router>
+  );
+}
